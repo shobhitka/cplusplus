@@ -4,11 +4,6 @@
 
 using namespace std;
 
-Book::Book()
-{
-
-}
-
 Book::Book(const char *name, int copies, double price)
 {
     strcpy(this->name, name);
@@ -50,6 +45,7 @@ BookStore::BookStore()
 {
     count = 0;
 }
+
 void BookStore::addBook(Book &book)
 {
     if (count > 16) {
@@ -62,11 +58,11 @@ void BookStore::addBook(Book &book)
 
 Book BookStore::searchBook(const char *title)
 {
-    Book none("", -1, 0.00); // empty book
+    Book empty; // empty book
     for (int i = 0; i < count; i++) {
         if (strcmp(books[i].getName(), title) == 0) {
             return books[i];
         }
     }
-    return none;
+    return empty;
 }

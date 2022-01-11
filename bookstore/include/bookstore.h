@@ -8,8 +8,7 @@ private:
 	double price;
 
 public:
-	Book();
-	Book(const char *name, int copies=0, double cost=0.0);
+	Book(const char *name = "", int copies=-1, double price=0.0);
 	char *getName();
 	void updateCopies(int sold);
 	int getCopies();
@@ -23,7 +22,7 @@ private:
 	int count = 0;
 
 public:
-	BookStore(void);
+	BookStore();
 	void addBook(Book &book);
 	Book searchBook(const char *title);
 };
