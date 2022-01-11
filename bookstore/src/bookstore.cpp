@@ -4,19 +4,25 @@
 
 using namespace std;
 
-Book::Book(const char *name, int copies, double price)
+BookStore::Book::Book(const char *name, int copies, double price):bookTitle(new char[strlen(name) + 1])
 {
-    strcpy(this->name, name);
+    strcpy(this->bookTitle, name);
     this->copies = copies;
     this->price = price;
 }
 
-char *Book::getName()
+BookStore::Book::~Book()
 {
-    return name;
+	cout << "Deleting Book: " << bookTitle << endl;
+	delete [] bookTitle;
 }
 
-void Book::updateCopies(int sold)
+char *BookStore::Book::getTitle()
+{
+    return bookTitle;
+}
+
+void BookStore::Book::updateCopies(int sold)
 {
     if (sold > copies) {
         cout << "Selling more than we have ?" << endl;
@@ -26,17 +32,17 @@ void Book::updateCopies(int sold)
     copies = copies - sold;
 }
 
-int Book::getCopies()
+int BookStore::Book::getCopies()
 {
     return copies;
 }
 
-double Book::getPrice()
+double BookStore::Book::getPrice()
 {
     return price;
 }
 
-void Book::updatePrice(double newprice)
+void BookStore::Book::updatePrice(double newprice)
 {
     price = newprice;
 }
@@ -46,23 +52,60 @@ BookStore::BookStore()
     count = 0;
 }
 
-void BookStore::addBook(Book &book)
+BookStore::~BookStore()
 {
+	for (int i = 0; i < count; i++)
+		delete books[i];
+}
+
+void BookStore::addBook()
+{
+	char title[64];
+	int copies;
+	double price;
+
     if (count > 16) {
         cout << "Cannot add more books" << endl;
         return;
     }
-    books[count] = book;
+
+	cout << "Enter book title: ";
+	cin >> title;
+	cout << "Enter number of copies: ";
+	cin >> copies;
+	cout << "Enter price: ";
+	cin >> price;
+
+    books[count] = new Book(title, copies, price);
     count++;
 }
 
-Book BookStore::searchBook(const char *title)
+int BookStore::searchBook(const char *title)
 {
-    Book empty; // empty book
     for (int i = 0; i < count; i++) {
-        if (strcmp(books[i].getName(), title) == 0) {
-            return books[i];
+        if (strcmp(books[i]->getTitle(), title) == 0) {
+            return i;
         }
     }
-    return empty;
+    return -1;
+}
+
+int BookStore::getBookCopies(int index)
+{
+	if (index > count || index < 0) {
+		cout << "Invalid book id: " << index << endl;
+		return -1;
+	}
+
+	return books[index]->getCopies();
+}
+
+int BookStore::getBookPrice(int index)
+{
+	if (index > count || index < 0) {
+		cout << "Invalid book id: " << index << endl;
+		return -1;
+	}
+
+	return books[index]->getPrice();
 }
