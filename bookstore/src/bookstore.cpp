@@ -56,6 +56,8 @@ BookStore::~BookStore()
 {
 	for (int i = 0; i < count; i++)
 		delete books[i];
+
+	cout << "Deleting the store" << endl;
 }
 
 void BookStore::addBook()
