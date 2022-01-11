@@ -9,6 +9,7 @@ static BookStore *store = NULL;
 void signal_hanlde(int signum)
 {
 	(void) signum;
+	cout << endl;
 	delete store;
 	exit(0);
 }
@@ -22,9 +23,11 @@ int main()
 
 	// add signal handler to free book store
 	signal(SIGINT, signal_hanlde);
-	store->addBook();
-	store->addBook();
-	store->addBook();
+
+	// Add books directly, though this is overloaded to take user input
+	store->addBook("C++", 10, 100.00);
+	store->addBook("C", 5, 50.00);
+	store->addBook("Java", 20, 200.00);
 
 	while (1) {
 		cout << "Enter title to search: ";

@@ -78,7 +78,17 @@ void BookStore::addBook()
 	cout << "Enter price: ";
 	cin >> price;
 
-    books[count] = new Book(title, copies, price);
+	books[count] = new Book(title, copies, price);
+    count++;
+}
+void BookStore::addBook(const char *name, int copies, double price)
+{
+    if (count > 16) {
+        cout << "Cannot add more books" << endl;
+        return;
+    }
+
+	books[count] = new Book(name, copies, price);
     count++;
 }
 

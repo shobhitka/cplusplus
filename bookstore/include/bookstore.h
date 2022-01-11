@@ -27,6 +27,7 @@ public:
 	BookStore();
 	~BookStore();
 	void addBook();
+	void addBook(const char *name, int copies, double price);
 	int searchBook(const char *title);
 	int getBookCopies(int index);
 	int getBookPrice(int index);
