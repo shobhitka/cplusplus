@@ -1,34 +1,50 @@
 #include <iostream>
 using namespace std;
 
-
 class BookStore {
 private:
 	class Book {
 	private:
 		char *bookTitle;
-		int copies;
 		double price;
 
 	public:
-		Book(const char *name = "", int copies=-1, double price=0.0);
+		Book(const char *name = "", double price=0.0);
 		~Book();
 		char *getTitle();
-		void updateCopies(int sold);
-		int getCopies();
-		void updatePrice(double newprice);
 		double getPrice();
+		void setPrice(double newPrice);
 	};
 
-	Book *books[16];
-	int count = 0;
+	class BookDetails {
+	private:
+		Book *b;
+		int stock;
+
+	public:
+		BookDetails(const char *bookTitle, double bookCost, int bookStock);
+		~BookDetails();
+		Book *getBook();
+		int getBookStock();
+		void setBookStock(int updatedStock);
+	};
+
+private:
+	char *bookStoreName;
+	BookDetails *books[16];
+	int bookDetailsCnt = 0;
+	int maxCnt;
+	static BookStore *bs;
+
+private:
+	BookStore(const char *name);
+	~BookStore();
 
 public:
-	BookStore();
-	~BookStore();
+	static BookStore *createInstance(const char *name);
+	static void deleteInstance();
 	void addBook();
-	void addBook(const char *name, int copies, double price);
-	int searchBook(const char *title);
-	int getBookCopies(int index);
-	int getBookPrice(int index);
+	void addBook(const char *bookTitle, double bookCost, int bookStock);
+	void searchBook(const char *title, int numCopies);
+	void displayBooks();
 };

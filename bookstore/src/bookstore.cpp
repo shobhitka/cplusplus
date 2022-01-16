@@ -3,11 +3,11 @@
 #include "bookstore.h"
 
 using namespace std;
+BookStore *BookStore::bs = NULL;
 
-BookStore::Book::Book(const char *name, int copies, double price):bookTitle(new char[strlen(name) + 1])
+BookStore::Book::Book(const char *name, double price):bookTitle(new char[strlen(name) + 1])
 {
     strcpy(this->bookTitle, name);
-    this->copies = copies;
     this->price = price;
 }
 
@@ -22,42 +22,70 @@ char *BookStore::Book::getTitle()
     return bookTitle;
 }
 
-void BookStore::Book::updateCopies(int sold)
-{
-    if (sold > copies) {
-        cout << "Selling more than we have ?" << endl;
-        return;
-    }
-
-    copies = copies - sold;
-}
-
-int BookStore::Book::getCopies()
-{
-    return copies;
-}
-
 double BookStore::Book::getPrice()
 {
     return price;
 }
 
-void BookStore::Book::updatePrice(double newprice)
+void BookStore::Book::setPrice(double newprice)
 {
     price = newprice;
 }
 
-BookStore::BookStore()
+BookStore::BookDetails::BookDetails(const char *bookTitle, double bookCost, int bookStock)
 {
-    count = 0;
+    b = new Book(bookTitle, bookCost);
+    stock = bookStock;
+}
+
+BookStore::BookDetails::~BookDetails()
+{
+    delete b;
+}
+
+BookStore::Book *BookStore::BookDetails::getBook()
+{
+    return b;
+}
+
+int BookStore::BookDetails::getBookStock()
+{
+    return stock;
+}
+
+void BookStore::BookDetails::setBookStock(int updatedStock)
+{
+    stock = updatedStock;
+}
+
+BookStore::BookStore(const char *name):bookStoreName(new char[strlen(name) + 1])
+{
+    strcpy(bookStoreName, name);
+    maxCnt = 5;
 }
 
 BookStore::~BookStore()
 {
-	for (int i = 0; i < count; i++)
+	for (int i = 0; i < bookDetailsCnt; i++)
 		delete books[i];
 
+    delete [] bookStoreName;
+
 	cout << "Deleting the store" << endl;
+}
+
+BookStore *BookStore::createInstance(const char *name)
+{
+    if(!bs) {
+        bs = new BookStore(name);
+    }
+
+    return bs;
+}
+
+void BookStore::deleteInstance()
+{
+    delete bs;
 }
 
 void BookStore::addBook()
@@ -66,7 +94,7 @@ void BookStore::addBook()
 	int copies;
 	double price;
 
-    if (count > 16) {
+    if (bookDetailsCnt == maxCnt) {
         cout << "Cannot add more books" << endl;
         return;
     }
@@ -78,46 +106,56 @@ void BookStore::addBook()
 	cout << "Enter price: ";
 	cin >> price;
 
-	books[count] = new Book(title, copies, price);
-    count++;
+	books[bookDetailsCnt] = new BookDetails(title, copies, price);
+    bookDetailsCnt++;
 }
-void BookStore::addBook(const char *name, int copies, double price)
+
+void BookStore::addBook(const char *bookTitle, double bookCost, int bookStock)
 {
-    if (count > 16) {
+    if (bookDetailsCnt > maxCnt) {
         cout << "Cannot add more books" << endl;
         return;
     }
 
-	books[count] = new Book(name, copies, price);
-    count++;
+	books[bookDetailsCnt] = new BookDetails(bookTitle, bookCost, bookStock);
+    bookDetailsCnt++;
 }
 
-int BookStore::searchBook(const char *title)
+void BookStore::displayBooks()
 {
-    for (int i = 0; i < count; i++) {
-        if (strcmp(books[i]->getTitle(), title) == 0) {
-            return i;
+	if (bookDetailsCnt == 0) {
+		cout << "Book catalog is empty" << endl;
+		return;
+	}
+
+	cout << "Title \t\tPrice \t\tStock" << endl;
+	cout << "-----------------------------------------" << endl;
+	for (int i = 0; i < bookDetailsCnt; i++) {
+		cout << books[i]->getBook()->getTitle() << "\t\t" << books[i]->getBook()->getPrice() << "\t\t" << books[i]->getBookStock() << endl;
+	}
+}
+
+void BookStore::searchBook(const char *title, int numCopies)
+{
+	BookDetails *bd = NULL;
+    for (int i = 0; i < bookDetailsCnt; i++) {
+        if (strcmp(books[i]->getBook()->getTitle(), title) == 0) {
+            bd = books[i];
+			break;
         }
     }
-    return -1;
-}
 
-int BookStore::getBookCopies(int index)
-{
-	if (index > count || index < 0) {
-		cout << "Invalid book id: " << index << endl;
-		return -1;
+	if (bd == NULL) {
+		// Book not found
+		cout << "Book for the specified title does not exist" << endl;
+		return;
 	}
 
-	return books[index]->getCopies();
-}
-
-int BookStore::getBookPrice(int index)
-{
-	if (index > count || index < 0) {
-		cout << "Invalid book id: " << index << endl;
-		return -1;
+	if (bd->getBookStock() < numCopies) {
+		cout << "Book available but the stock is insufficient." << endl;
+		return;
 	}
 
-	return books[index]->getPrice();
+	cout << "Book available with sufficient stock. Total Cost = INR " << bd->getBook()->getPrice() * numCopies << endl;
+	return;
 }
