@@ -88,6 +88,25 @@ void BookStore::deleteInstance()
     delete bs;
 }
 
+void BookStore::_addBook(const char *bookTitle, double bookCost, int bookStock)
+{
+	BookDetails *bdetails = searchBook(bookTitle);
+	if (bdetails) {
+		// just update the stock and the price if it has changed
+		bdetails->setBookStock(bdetails->getBookStock() + bookStock);
+		if (bdetails->getBook()->getPrice() != bookCost) {
+			bdetails->getBook()->setPrice(bookCost);
+			cout << "Updating price to new price: INR " << bookCost << endl;
+		}
+
+		cout << "Update book stock to " << bdetails->getBookStock() << endl;
+	} else {
+		books[bookDetailsCnt] = new BookDetails(bookTitle, bookCost, bookStock);
+		bookDetailsCnt++;
+		cout << "Added new book to catalogue" << endl;
+	}
+}
+
 void BookStore::addBook()
 {
 	char title[64];
@@ -106,8 +125,7 @@ void BookStore::addBook()
 	cout << "Enter price: ";
 	cin >> price;
 
-	books[bookDetailsCnt] = new BookDetails(title, copies, price);
-    bookDetailsCnt++;
+	_addBook(title, price, copies);
 }
 
 void BookStore::addBook(const char *bookTitle, double bookCost, int bookStock)
@@ -117,8 +135,7 @@ void BookStore::addBook(const char *bookTitle, double bookCost, int bookStock)
         return;
     }
 
-	books[bookDetailsCnt] = new BookDetails(bookTitle, bookCost, bookStock);
-    bookDetailsCnt++;
+	_addBook(bookTitle, bookCost, bookStock);
 }
 
 void BookStore::displayBooks()
@@ -133,6 +150,17 @@ void BookStore::displayBooks()
 	for (int i = 0; i < bookDetailsCnt; i++) {
 		cout << books[i]->getBook()->getTitle() << "\t\t" << books[i]->getBook()->getPrice() << "\t\t" << books[i]->getBookStock() << endl;
 	}
+}
+
+BookStore::BookDetails *BookStore::searchBook(const char *title)
+{
+    for (int i = 0; i < bookDetailsCnt; i++) {
+        if (strcmp(books[i]->getBook()->getTitle(), title) == 0) {
+            return books[i];
+        }
+    }
+
+	return NULL;
 }
 
 void BookStore::searchBook(const char *title, int numCopies)

@@ -41,7 +41,7 @@ int main()
 	while (1) {
 		int choice;
 		menu();
-		cout << "Enter choise: ";
+		cout << "Enter choice: ";
 		cin >> choice;
 
 		switch (choice) {
