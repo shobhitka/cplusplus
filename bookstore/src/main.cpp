@@ -13,8 +13,10 @@ void signal_hanlde(int signum)
 	exit(0);
 }
 
-void menu()
+void menu(char *storeName)
 {
+	cout << "-----------------------------------------" << endl;
+	cout << "BookStore: " << storeName << endl;
 	cout << "-----------------------------------------" << endl;
 	cout << "1. Add new Book" << endl;
 	cout << "2. Display all book details" << endl;
@@ -40,7 +42,7 @@ int main()
 
 	while (1) {
 		int choice;
-		menu();
+		menu(store->getStoreName());
 		cout << "Enter choice: ";
 		cin >> choice;
 
@@ -64,7 +66,6 @@ int main()
 				exit(0);
 			default:
 				cout << "Invalid choice" << endl;
-				menu();
 				break;
 		};
 	}

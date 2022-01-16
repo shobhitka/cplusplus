@@ -48,6 +48,7 @@ public:
 	void searchBook(const char *title, int numCopies);
 	BookDetails *searchBook(const char * title);
 	void displayBooks();
+	char *getStoreName();
 private:
 	void _addBook(const char *bookTitle, double bookCost, int bookStock);
 };

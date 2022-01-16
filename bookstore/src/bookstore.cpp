@@ -13,7 +13,7 @@ BookStore::Book::Book(const char *name, double price):bookTitle(new char[strlen(
 
 BookStore::Book::~Book()
 {
-	cout << "Deleting Book: " << bookTitle << endl;
+	cout << ">> Deleting Book: " << bookTitle << endl;
 	delete [] bookTitle;
 }
 
@@ -71,7 +71,7 @@ BookStore::~BookStore()
 
     delete [] bookStoreName;
 
-	cout << "Deleting the store" << endl;
+	cout << ">> Deleting the store" << endl;
 }
 
 BookStore *BookStore::createInstance(const char *name)
@@ -96,14 +96,14 @@ void BookStore::_addBook(const char *bookTitle, double bookCost, int bookStock)
 		bdetails->setBookStock(bdetails->getBookStock() + bookStock);
 		if (bdetails->getBook()->getPrice() != bookCost) {
 			bdetails->getBook()->setPrice(bookCost);
-			cout << "Updating price to new price: INR " << bookCost << endl;
+			cout << ">> Updating price to new price: INR " << bookCost << endl;
 		}
 
-		cout << "Update book stock to " << bdetails->getBookStock() << endl;
+		cout << ">> Update book stock to " << bdetails->getBookStock() << endl;
 	} else {
 		books[bookDetailsCnt] = new BookDetails(bookTitle, bookCost, bookStock);
 		bookDetailsCnt++;
-		cout << "Added new book to catalogue" << endl;
+		cout << ">> Added new book to catalogue" << endl;
 	}
 }
 
@@ -114,7 +114,7 @@ void BookStore::addBook()
 	double price;
 
     if (bookDetailsCnt == maxCnt) {
-        cout << "Cannot add more books" << endl;
+        cout << ">> Cannot add more books" << endl;
         return;
     }
 
@@ -131,7 +131,7 @@ void BookStore::addBook()
 void BookStore::addBook(const char *bookTitle, double bookCost, int bookStock)
 {
     if (bookDetailsCnt > maxCnt) {
-        cout << "Cannot add more books" << endl;
+        cout << ">> Cannot add more books" << endl;
         return;
     }
 
@@ -141,7 +141,7 @@ void BookStore::addBook(const char *bookTitle, double bookCost, int bookStock)
 void BookStore::displayBooks()
 {
 	if (bookDetailsCnt == 0) {
-		cout << "Book catalog is empty" << endl;
+		cout << ">> Book catalog is empty" << endl;
 		return;
 	}
 
@@ -178,17 +178,17 @@ void BookStore::searchBook(const char *title, int numCopies)
 
 	if (bd == NULL) {
 		// Book not found
-		cout << "Book for the specified title does not exist" << endl;
+		cout << ">> Book for the specified title does not exist" << endl;
 		return;
 	}
 
 	if (bd->getBookStock() < numCopies) {
-		cout << "Book available but the stock is insufficient." << endl;
+		cout << ">> Book available but the stock is insufficient." << endl;
 		return;
 	}
 
-	cout << "Book available with sufficient stock. Total Cost = INR " << bd->getBook()->getPrice() * numCopies << endl;
-	cout << "Want to purchase the book (y/n) ? ";
+	cout << ">> Book available with sufficient stock. Total Cost = INR " << bd->getBook()->getPrice() * numCopies << endl;
+	cout << ">> Want to purchase the book (y/n) ? ";
 	cin >> ans;
 	switch (ans) {
 		case 'y':
@@ -214,9 +214,14 @@ void BookStore::searchBook(const char *title, int numCopies)
 		case 'n':
 			break;
 		default:
-			cout << "Wrong option. Cancelling purchase" << endl;
+			cout << ">> Wrong option. Cancelling purchase" << endl;
 			break;
 	}
 
 	return;
+}
+
+char *BookStore::getStoreName()
+{
+	return bookStoreName;
 }
