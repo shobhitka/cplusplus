@@ -165,10 +165,13 @@ BookStore::BookDetails *BookStore::searchBook(const char *title)
 
 void BookStore::searchBook(const char *title, int numCopies)
 {
+	char ans;
 	BookDetails *bd = NULL;
+	int index = -1;
     for (int i = 0; i < bookDetailsCnt; i++) {
         if (strcmp(books[i]->getBook()->getTitle(), title) == 0) {
             bd = books[i];
+			index = i;
 			break;
         }
     }
@@ -185,5 +188,35 @@ void BookStore::searchBook(const char *title, int numCopies)
 	}
 
 	cout << "Book available with sufficient stock. Total Cost = INR " << bd->getBook()->getPrice() * numCopies << endl;
+	cout << "Want to purchase the book (y/n) ? ";
+	cin >> ans;
+	switch (ans) {
+		case 'y':
+			// reduce the stock of the book and if stock becomes 0 then delete the book;
+			if ((bd->getBookStock() - numCopies) == 0) {
+				// Delete the book from the catalogue
+				if (index == (bookDetailsCnt - 1)) {
+					// do nothing last book in catalogue
+					delete bd;
+					bookDetailsCnt--;
+				} else {
+					//swap the last bookdetail to this index
+					books[index] = books[bookDetailsCnt - 1];
+					bookDetailsCnt--;
+					delete bd;
+				}
+			} else {
+				// just update the stock
+				bd->setBookStock(bd->getBookStock() - numCopies);
+			}
+
+			break;
+		case 'n':
+			break;
+		default:
+			cout << "Wrong option. Cancelling purchase" << endl;
+			break;
+	}
+
 	return;
 }
