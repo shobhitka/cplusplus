@@ -107,27 +107,6 @@ void BookStore::_addBook(const char *bookTitle, double bookCost, int bookStock)
 	}
 }
 
-void BookStore::addBook()
-{
-	char title[64];
-	int copies;
-	double price;
-
-    if (bookDetailsCnt == maxCnt) {
-        cout << ">> Cannot add more books" << endl;
-        return;
-    }
-
-	cout << "Enter book title: ";
-	cin >> title;
-	cout << "Enter number of copies: ";
-	cin >> copies;
-	cout << "Enter price: ";
-	cin >> price;
-
-	_addBook(title, price, copies);
-}
-
 void BookStore::addBook(const char *bookTitle, double bookCost, int bookStock)
 {
     if (bookDetailsCnt > maxCnt) {
@@ -135,7 +114,21 @@ void BookStore::addBook(const char *bookTitle, double bookCost, int bookStock)
         return;
     }
 
-	_addBook(bookTitle, bookCost, bookStock);
+	if (bookTitle == NULL) {
+		char title[64];
+		int copies;
+		double price;
+		cout << "Enter book title: ";
+		cin >> title;
+		cout << "Enter number of copies: ";
+		cin >> copies;
+		cout << "Enter price: ";
+		cin >> price;
+
+		_addBook(title, price, copies);
+	} else {
+		_addBook(bookTitle, bookCost, bookStock);
+	}
 }
 
 void BookStore::displayBooks()

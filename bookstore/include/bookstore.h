@@ -43,8 +43,7 @@ private:
 public:
 	static BookStore *createInstance(const char *name);
 	static void deleteInstance();
-	void addBook();
-	void addBook(const char *bookTitle, double bookCost, int bookStock);
+	void addBook(const char *bookTitle = NULL, double bookCost = 0.0, int bookStock = -1);
 	void searchBook(const char *title, int numCopies);
 	BookDetails *searchBook(const char * title);
 	void displayBooks();
