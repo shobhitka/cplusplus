@@ -5,55 +5,55 @@
 using namespace std;
 BookStore *BookStore::bs = NULL;
 
-BookStore::Book::Book(const char *name, double price):bookTitle(new char[strlen(name) + 1])
+Book::Book(const char *name, double price):bookTitle(new char[strlen(name) + 1])
 {
     strcpy(this->bookTitle, name);
     this->price = price;
 }
 
-BookStore::Book::~Book()
+Book::~Book()
 {
 	cout << ">> Deleting Book: " << bookTitle << endl;
 	delete [] bookTitle;
 }
 
-char *BookStore::Book::getTitle()
+char *Book::getTitle()
 {
     return bookTitle;
 }
 
-double BookStore::Book::getPrice()
+double Book::getPrice()
 {
     return price;
 }
 
-void BookStore::Book::setPrice(double newprice)
+void Book::setPrice(double newprice)
 {
     price = newprice;
 }
 
-BookStore::BookDetails::BookDetails(const char *bookTitle, double bookCost, int bookStock)
+BookDetails::BookDetails(const char *bookTitle, double bookCost, int bookStock)
 {
     b = new Book(bookTitle, bookCost);
     stock = bookStock;
 }
 
-BookStore::BookDetails::~BookDetails()
+BookDetails::~BookDetails()
 {
     delete b;
 }
 
-BookStore::Book *BookStore::BookDetails::getBook()
+Book *BookDetails::getBook()
 {
     return b;
 }
 
-int BookStore::BookDetails::getBookStock()
+int BookDetails::getBookStock()
 {
     return stock;
 }
 
-void BookStore::BookDetails::setBookStock(int updatedStock)
+void BookDetails::setBookStock(int updatedStock)
 {
     stock = updatedStock;
 }
@@ -145,7 +145,7 @@ void BookStore::displayBooks()
 	}
 }
 
-BookStore::BookDetails *BookStore::searchBook(const char *title)
+BookDetails *BookStore::searchBook(const char *title)
 {
     for (int i = 0; i < bookDetailsCnt; i++) {
         if (strcmp(books[i]->getBook()->getTitle(), title) == 0) {

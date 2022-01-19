@@ -1,34 +1,33 @@
 #include <iostream>
 using namespace std;
 
-class BookStore {
+class Book {
 private:
-	class Book {
-	private:
-		char *bookTitle;
-		double price;
+	char *bookTitle;
+	double price;
 
-	public:
-		Book(const char *name = "", double price=0.0);
-		~Book();
-		char *getTitle();
-		double getPrice();
-		void setPrice(double newPrice);
-	};
+public:
+	Book(const char *name = "", double price=0.0);
+	~Book();
+	char *getTitle();
+	double getPrice();
+	void setPrice(double newPrice);
+};
 
-	class BookDetails {
-	private:
-		Book *b;
-		int stock;
+class BookDetails {
+private:
+	Book *b;
+	int stock;
 
-	public:
-		BookDetails(const char *bookTitle, double bookCost, int bookStock);
-		~BookDetails();
-		Book *getBook();
-		int getBookStock();
-		void setBookStock(int updatedStock);
-	};
+public:
+	BookDetails(const char *bookTitle, double bookCost, int bookStock);
+	~BookDetails();
+	Book *getBook();
+	int getBookStock();
+	void setBookStock(int updatedStock);
+};
 
+class BookStore {
 private:
 	char *bookStoreName;
 	BookDetails *books[16];
