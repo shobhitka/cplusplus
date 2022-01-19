@@ -14,6 +14,16 @@ public:
 	void setPrice(double newPrice);
 };
 
+class TechnicalBook : public Book {
+	static double discount;
+	TechnicalBook(const char *title, double cost);
+};
+
+class ManagementBook : public Book {
+	static double discount;
+	ManagementBook(const char *title, double cost);
+};
+
 class BookDetails {
 private:
 	Book *b;

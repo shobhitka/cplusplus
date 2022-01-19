@@ -32,6 +32,16 @@ void Book::setPrice(double newprice)
     price = newprice;
 }
 
+double TechnicalBook::discount = 0.05;
+TechnicalBook::TechnicalBook(const char *title, double cost) : Book(title, cost)
+{
+}
+
+double ManagementBook::discount = 0.10;
+ManagementBook::ManagementBook(const char *title, double cost) : Book(title, cost)
+{
+}
+
 BookDetails::BookDetails(const char *bookTitle, double bookCost, int bookStock)
 {
     b = new Book(bookTitle, bookCost);
