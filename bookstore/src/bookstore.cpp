@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string.h>
+#include <typeinfo>
+#include <cxxabi.h>
 #include "bookstore.h"
 
 using namespace std;
@@ -32,12 +34,12 @@ void Book::setPrice(double newprice)
     price = newprice;
 }
 
-double TechnicalBook::discount = 0.05;
+double TechnicalBook::discount = 5;
 TechnicalBook::TechnicalBook(const char *title, double cost) : Book(title, cost)
 {
 }
 
-double ManagementBook::discount = 0.10;
+double ManagementBook::discount = 10;
 ManagementBook::ManagementBook(const char *title, double cost) : Book(title, cost)
 {
 }
@@ -159,17 +161,50 @@ void BookStore::addBook(int category, const char *bookTitle, double bookCost, in
 	}
 }
 
-void BookStore::displayBooks()
+void BookStore::displayBooks(int category)
 {
+	int displayCnt = 0;
 	if (bookDetailsCnt == 0) {
 		cout << ">> Book catalog is empty" << endl;
 		return;
 	}
 
-	cout << "Title \t\tPrice \t\tStock" << endl;
-	cout << "-----------------------------------------" << endl;
+	cout << "Title \t\tPrice \t\tStock \t\tDiscount" << endl;
+	cout << "-----------------------------------------------------------" << endl;
+
 	for (int i = 0; i < bookDetailsCnt; i++) {
-		cout << books[i]->getBook()->getTitle() << "\t\t" << books[i]->getBook()->getPrice() << "\t\t" << books[i]->getBookStock() << endl;
+		BookDetails *bd = books[i];
+		switch (category) {
+		case BOOK_ANY:
+			if (typeid(*(bd->getBook())) == typeid(TechnicalBook)) {
+				TechnicalBook *b = (TechnicalBook *) bd->getBook();
+				cout << b->getTitle() << "\t\t" << b->getPrice() << "\t\t" << bd->getBookStock() << "\t\t" << b->getDiscount() << "%" << endl;
+			} else if (typeid(*(bd->getBook())) == typeid(ManagementBook)) {
+				ManagementBook *b = (ManagementBook *) bd->getBook();
+				cout << b->getTitle() << "\t\t" << b->getPrice() << "\t\t" << bd->getBookStock() << "\t\t" << b->getDiscount() << "%"  << endl;
+			}
+
+			displayCnt++;
+			break;
+		case BOOK_TECHNICAL:
+			if (typeid(*(bd->getBook())) == typeid(TechnicalBook)) {
+				TechnicalBook *b = (TechnicalBook *) bd->getBook();
+				cout << b->getTitle() << "\t\t" << b->getPrice() << "\t\t" << bd->getBookStock() << "\t\t" << b->getDiscount() << "%" << endl;
+				displayCnt++;
+			}
+			break;
+		case BOOK_MANAGEMENT:
+			if (typeid(*(bd->getBook())) == typeid(ManagementBook)) {
+				ManagementBook *b = (ManagementBook *) bd->getBook();
+				cout << b->getTitle() << "\t\t" << b->getPrice() << "\t\t" << bd->getBookStock() << "\t\t" << b->getDiscount() << "%" << endl;
+				displayCnt++;
+			}
+			break;
+		}
+	}
+
+	if (displayCnt == 0) {
+		cout << ">> No books in category" << endl;
 	}
 }
 
