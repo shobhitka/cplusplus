@@ -42,9 +42,27 @@ ManagementBook::ManagementBook(const char *title, double cost) : Book(title, cos
 {
 }
 
-BookDetails::BookDetails(const char *bookTitle, double bookCost, int bookStock)
+double TechnicalBook::getDiscount()
 {
-    b = new Book(bookTitle, bookCost);
+	return discount;
+}
+
+double ManagementBook::getDiscount()
+{
+	return discount;
+}
+
+BookDetails::BookDetails(int category, const char *bookTitle, double bookCost, int bookStock)
+{
+	switch(category) {
+		case BOOK_TECHNICAL:
+			b = new TechnicalBook(bookTitle, bookCost);
+			break;
+		case BOOK_MANAGEMENT:
+			b = new ManagementBook(bookTitle, bookCost);
+			break;
+	}
+
     stock = bookStock;
 }
 
@@ -98,7 +116,7 @@ void BookStore::deleteInstance()
     delete bs;
 }
 
-void BookStore::_addBook(const char *bookTitle, double bookCost, int bookStock)
+void BookStore::_addBook(int category, const char *bookTitle, double bookCost, int bookStock)
 {
 	BookDetails *bdetails = searchBook(bookTitle);
 	if (bdetails) {
@@ -111,13 +129,13 @@ void BookStore::_addBook(const char *bookTitle, double bookCost, int bookStock)
 
 		cout << ">> Update book stock to " << bdetails->getBookStock() << endl;
 	} else {
-		books[bookDetailsCnt] = new BookDetails(bookTitle, bookCost, bookStock);
+		books[bookDetailsCnt] = new BookDetails(category, bookTitle, bookCost, bookStock);
 		bookDetailsCnt++;
 		cout << ">> Added new book to catalogue" << endl;
 	}
 }
 
-void BookStore::addBook(const char *bookTitle, double bookCost, int bookStock)
+void BookStore::addBook(int category, const char *bookTitle, double bookCost, int bookStock)
 {
     if (bookDetailsCnt > maxCnt) {
         cout << ">> Cannot add more books" << endl;
@@ -135,9 +153,9 @@ void BookStore::addBook(const char *bookTitle, double bookCost, int bookStock)
 		cout << "Enter price: ";
 		cin >> price;
 
-		_addBook(title, price, copies);
+		_addBook(category, title, price, copies);
 	} else {
-		_addBook(bookTitle, bookCost, bookStock);
+		_addBook(category, bookTitle, bookCost, bookStock);
 	}
 }
 

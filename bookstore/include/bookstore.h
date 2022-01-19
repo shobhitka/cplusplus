@@ -1,6 +1,9 @@
 #include <iostream>
 using namespace std;
 
+#define BOOK_TECHNICAL	1
+#define BOOK_MANAGEMENT	2
+
 class Book {
 private:
 	char *bookTitle;
@@ -16,12 +19,16 @@ public:
 
 class TechnicalBook : public Book {
 	static double discount;
+public:
 	TechnicalBook(const char *title, double cost);
+	double getDiscount();
 };
 
 class ManagementBook : public Book {
 	static double discount;
+public:
 	ManagementBook(const char *title, double cost);
+	double getDiscount();
 };
 
 class BookDetails {
@@ -30,7 +37,7 @@ private:
 	int stock;
 
 public:
-	BookDetails(const char *bookTitle, double bookCost, int bookStock);
+	BookDetails(int category, const char *bookTitle, double bookCost, int bookStock);
 	~BookDetails();
 	Book *getBook();
 	int getBookStock();
@@ -52,11 +59,11 @@ private:
 public:
 	static BookStore *createInstance(const char *name);
 	static void deleteInstance();
-	void addBook(const char *bookTitle = NULL, double bookCost = 0.0, int bookStock = -1);
+	void addBook(int category, const char *bookTitle = NULL, double bookCost = 0.0, int bookStock = -1);
 	void searchBook(const char *title, int numCopies);
 	BookDetails *searchBook(const char * title);
 	void displayBooks();
 	char *getStoreName();
 private:
-	void _addBook(const char *bookTitle, double bookCost, int bookStock);
+	void _addBook(int category, const char *bookTitle, double bookCost, int bookStock);
 };

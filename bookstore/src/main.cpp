@@ -25,6 +25,14 @@ void menu(char *storeName)
 	cout << "-----------------------------------------" << endl;
 }
 
+void submenu()
+{
+	cout << "-----------------------------------------" << endl;
+	cout << "1. Add technical book" << endl;
+	cout << "2. Add management book" << endl;
+	cout << "-----------------------------------------" << endl;
+}
+
 int main()
 {
 	char title[32];
@@ -36,19 +44,23 @@ int main()
 	signal(SIGINT, signal_hanlde);
 
 	// Add books directly, though this is overloaded to take user input
-	store->addBook("C++", 100.00, 10);
-	store->addBook("C", 50.00, 5);
-	store->addBook("Java", 200.00, 20);
+	store->addBook(BOOK_TECHNICAL, "C++", 100.00, 10);
+	store->addBook(BOOK_TECHNICAL, "C", 50.00, 5);
+	store->addBook(BOOK_TECHNICAL, "Java", 200.00, 20);
 
 	while (1) {
 		int choice;
+		int category;
 		menu(store->getStoreName());
 		cout << "Enter choice: ";
 		cin >> choice;
 
 		switch (choice) {
 			case 1:
-				store->addBook();
+				submenu();
+				cout << "Select book category to add: ";
+				cin >> category;
+				store->addBook(category);
 				break;
 			case 2:
 				store->displayBooks();
