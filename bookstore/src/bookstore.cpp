@@ -224,6 +224,8 @@ void BookStore::searchBook(const char *title, int numCopies)
 	char ans;
 	BookDetails *bd = NULL;
 	int index = -1;
+	int discount = 0;
+	double price = 0.0;
     for (int i = 0; i < bookDetailsCnt; i++) {
         if (strcmp(books[i]->getBook()->getTitle(), title) == 0) {
             bd = books[i];
@@ -243,7 +245,16 @@ void BookStore::searchBook(const char *title, int numCopies)
 		return;
 	}
 
-	cout << ">> Book available with sufficient stock. Total Cost = INR " << bd->getBook()->getPrice() * numCopies << endl;
+	if (typeid(*(bd->getBook())) == typeid(TechnicalBook)) {
+		TechnicalBook *b = (TechnicalBook *) bd->getBook();
+		discount = b->getDiscount();
+		price = b->getPrice() * numCopies * (100 - discount)/100;
+	} else {
+		ManagementBook *b = (ManagementBook *) bd->getBook();
+		discount = b->getDiscount();
+		price = b->getPrice() * numCopies * (100 - discount)/100;
+	}
+	cout << ">> Book available with sufficient stock. Total Cost = INR " << price << " with discount of " << discount << "%" << endl;
 	cout << ">> Want to purchase the book (y/n) ? ";
 	cin >> ans;
 	switch (ans) {
