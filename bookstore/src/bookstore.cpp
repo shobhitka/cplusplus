@@ -7,19 +7,17 @@
 using namespace std;
 BookStore *BookStore::bs = NULL;
 
-Book::Book(const char *name, double price):bookTitle(new char[strlen(name) + 1])
+Book::Book(const string name, double price):bookTitle(name)
 {
-    strcpy(this->bookTitle, name);
     this->price = price;
 }
 
 Book::~Book()
 {
 	cout << ">> Deleting Book: " << bookTitle << endl;
-	delete [] bookTitle;
 }
 
-char *Book::getTitle()
+string Book::getTitle()
 {
     return bookTitle;
 }
@@ -35,12 +33,12 @@ void Book::setPrice(double newprice)
 }
 
 double TechnicalBook::discount = 5;
-TechnicalBook::TechnicalBook(const char *title, double cost) : Book(title, cost)
+TechnicalBook::TechnicalBook(const string title, double cost) : Book(title, cost)
 {
 }
 
 double ManagementBook::discount = 10;
-ManagementBook::ManagementBook(const char *title, double cost) : Book(title, cost)
+ManagementBook::ManagementBook(const string title, double cost) : Book(title, cost)
 {
 }
 
@@ -54,7 +52,7 @@ double ManagementBook::getDiscount()
 	return discount;
 }
 
-BookDetails::BookDetails(int category, const char *bookTitle, double bookCost, int bookStock)
+BookDetails::BookDetails(int category, const string bookTitle, double bookCost, int bookStock)
 {
 	switch(category) {
 		case BOOK_TECHNICAL:
@@ -88,9 +86,8 @@ void BookDetails::setBookStock(int updatedStock)
     stock = updatedStock;
 }
 
-BookStore::BookStore(const char *name):bookStoreName(new char[strlen(name) + 1])
+BookStore::BookStore(const string name):bookStoreName(name)
 {
-    strcpy(bookStoreName, name);
     maxCnt = 5;
 }
 
@@ -99,12 +96,10 @@ BookStore::~BookStore()
 	for (int i = 0; i < bookDetailsCnt; i++)
 		delete books[i];
 
-    delete [] bookStoreName;
-
 	cout << ">> Deleting the store" << endl;
 }
 
-BookStore *BookStore::createInstance(const char *name)
+BookStore *BookStore::createInstance(const string name)
 {
     if(!bs) {
         bs = new BookStore(name);
@@ -118,7 +113,7 @@ void BookStore::deleteInstance()
     delete bs;
 }
 
-void BookStore::_addBook(int category, const char *bookTitle, double bookCost, int bookStock)
+void BookStore::_addBook(int category, const string bookTitle, double bookCost, int bookStock)
 {
 	BookDetails *bdetails = searchBook(bookTitle);
 	if (bdetails) {
@@ -137,15 +132,15 @@ void BookStore::_addBook(int category, const char *bookTitle, double bookCost, i
 	}
 }
 
-void BookStore::addBook(int category, const char *bookTitle, double bookCost, int bookStock)
+void BookStore::addBook(int category, const string bookTitle, double bookCost, int bookStock)
 {
     if (bookDetailsCnt > maxCnt) {
         cout << ">> Cannot add more books" << endl;
         return;
     }
 
-	if (bookTitle == NULL) {
-		char title[64];
+	if (bookTitle == "") {
+		string title;
 		int copies;
 		double price;
 		cout << "Enter book title: ";
@@ -208,10 +203,10 @@ void BookStore::displayBooks(int category)
 	}
 }
 
-BookDetails *BookStore::searchBook(const char *title)
+BookDetails *BookStore::searchBook(const string title)
 {
     for (int i = 0; i < bookDetailsCnt; i++) {
-        if (strcmp(books[i]->getBook()->getTitle(), title) == 0) {
+        if (books[i]->getBook()->getTitle() == title) {
             return books[i];
         }
     }
@@ -219,7 +214,7 @@ BookDetails *BookStore::searchBook(const char *title)
 	return NULL;
 }
 
-void BookStore::searchBook(const char *title, int numCopies)
+void BookStore::searchBook(const string title, int numCopies)
 {
 	char ans;
 	BookDetails *bd = NULL;
@@ -227,7 +222,7 @@ void BookStore::searchBook(const char *title, int numCopies)
 	int discount = 0;
 	double price = 0.0;
     for (int i = 0; i < bookDetailsCnt; i++) {
-        if (strcmp(books[i]->getBook()->getTitle(), title) == 0) {
+        if (books[i]->getBook()->getTitle() == title) {
             bd = books[i];
 			index = i;
 			break;
@@ -288,7 +283,7 @@ void BookStore::searchBook(const char *title, int numCopies)
 	return;
 }
 
-char *BookStore::getStoreName()
+string BookStore::getStoreName()
 {
 	return bookStoreName;
 }

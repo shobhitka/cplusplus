@@ -2,6 +2,7 @@
 #include <signal.h>
 #include "bookstore.h"
 #include <typeinfo>
+#include <stdlib.h>
 
 using namespace std;
 static BookStore *store = NULL;
@@ -14,7 +15,7 @@ void signal_hanlde(int signum)
 	exit(0);
 }
 
-void menu(char *storeName)
+void menu(string storeName)
 {
 	cout << "-----------------------------------------------------------" << endl;
 	cout << "BookStore: " << storeName << endl;
@@ -45,18 +46,18 @@ void dispaly_submenu()
 
 int main()
 {
-	char title[32];
+	string title;
 	int quantity;
 
-	store = BookStore::createInstance("Gangarams");
+	store = BookStore::createInstance(string("Gangarams"));
 
 	// add signal handler to free book store
 	signal(SIGINT, signal_hanlde);
 
 	// Add books directly, though this is overloaded to take user input
-	store->addBook(BOOK_TECHNICAL, "C++", 100.00, 10);
-	store->addBook(BOOK_TECHNICAL, "C", 50.00, 5);
-	store->addBook(BOOK_TECHNICAL, "Java", 200.00, 20);
+	store->addBook(BOOK_TECHNICAL, string("C++"), 100.00, 10);
+	store->addBook(BOOK_TECHNICAL, string("C"), 50.00, 5);
+	store->addBook(BOOK_TECHNICAL, string("Java"), 200.00, 20);
 
 	while (1) {
 		int choice;

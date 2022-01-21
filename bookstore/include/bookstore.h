@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
 #define BOOK_ANY		1
@@ -7,13 +8,13 @@ using namespace std;
 
 class Book {
 private:
-	char *bookTitle;
+	string bookTitle;
 	double price;
 
 public:
-	Book(const char *name = "", double price=0.0);
+	Book(const string name = "", double price=0.0);
 	virtual ~Book();
-	char *getTitle();
+	string getTitle();
 	double getPrice();
 	void setPrice(double newPrice);
 };
@@ -21,14 +22,14 @@ public:
 class TechnicalBook : public Book {
 	static double discount;
 public:
-	TechnicalBook(const char *title, double cost);
+	TechnicalBook(const string title, double cost);
 	double getDiscount();
 };
 
 class ManagementBook : public Book {
 	static double discount;
 public:
-	ManagementBook(const char *title, double cost);
+	ManagementBook(const string title, double cost);
 	double getDiscount();
 };
 
@@ -38,7 +39,7 @@ private:
 	int stock;
 
 public:
-	BookDetails(int category, const char *bookTitle, double bookCost, int bookStock);
+	BookDetails(int category, const string bookTitle, double bookCost, int bookStock);
 	~BookDetails();
 	Book *getBook();
 	int getBookStock();
@@ -47,24 +48,24 @@ public:
 
 class BookStore {
 private:
-	char *bookStoreName;
+	string bookStoreName;
 	BookDetails *books[16];
 	int bookDetailsCnt = 0;
 	int maxCnt;
 	static BookStore *bs;
 
 private:
-	BookStore(const char *name);
+	BookStore(const string name);
 	~BookStore();
 
 public:
-	static BookStore *createInstance(const char *name);
+	static BookStore *createInstance(const string name);
 	static void deleteInstance();
-	void addBook(int category, const char *bookTitle = NULL, double bookCost = 0.0, int bookStock = -1);
-	void searchBook(const char *title, int numCopies);
-	BookDetails *searchBook(const char * title);
+	void addBook(int category, const string bookTitle = "", double bookCost = 0.0, int bookStock = -1);
+	void searchBook(const string title, int numCopies);
+	BookDetails *searchBook(const string title);
 	void displayBooks(int category);
-	char *getStoreName();
+	string getStoreName();
 private:
-	void _addBook(int category, const char *bookTitle, double bookCost, int bookStock);
+	void _addBook(int category, const string bookTitle, double bookCost, int bookStock);
 };
