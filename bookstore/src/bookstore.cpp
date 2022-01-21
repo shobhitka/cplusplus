@@ -88,15 +88,16 @@ void BookDetails::setBookStock(int updatedStock)
 
 BookStore::BookStore(const string name):bookStoreName(name)
 {
-    maxCnt = 5;
 }
 
 BookStore::~BookStore()
 {
-	for (int i = 0; i < bookDetailsCnt; i++)
-		delete books[i];
+	for (bookIter = books.begin(); bookIter != books.end(); bookIter++) {
+		delete *bookIter;
+	}
 
 	cout << ">> Deleting the store" << endl;
+	books.clear();
 }
 
 BookStore *BookStore::createInstance(const string name)
@@ -126,19 +127,13 @@ void BookStore::_addBook(int category, const string bookTitle, double bookCost, 
 
 		cout << ">> Update book stock to " << bdetails->getBookStock() << endl;
 	} else {
-		books[bookDetailsCnt] = new BookDetails(category, bookTitle, bookCost, bookStock);
-		bookDetailsCnt++;
+		books.push_back(new BookDetails(category, bookTitle, bookCost, bookStock));
 		cout << ">> Added new book to catalogue" << endl;
 	}
 }
 
 void BookStore::addBook(int category, const string bookTitle, double bookCost, int bookStock)
 {
-    if (bookDetailsCnt > maxCnt) {
-        cout << ">> Cannot add more books" << endl;
-        return;
-    }
-
 	if (bookTitle == "") {
 		string title;
 		int copies;
@@ -159,7 +154,7 @@ void BookStore::addBook(int category, const string bookTitle, double bookCost, i
 void BookStore::displayBooks(int category)
 {
 	int displayCnt = 0;
-	if (bookDetailsCnt == 0) {
+	if (books.empty()) {
 		cout << ">> Book catalog is empty" << endl;
 		return;
 	}
@@ -167,8 +162,8 @@ void BookStore::displayBooks(int category)
 	cout << "Title \t\tPrice \t\tStock \t\tDiscount" << endl;
 	cout << "-----------------------------------------------------------" << endl;
 
-	for (int i = 0; i < bookDetailsCnt; i++) {
-		BookDetails *bd = books[i];
+	for (bookIter = books.begin(); bookIter != books.end(); bookIter++) {
+		BookDetails *bd = *bookIter;
 		switch (category) {
 		case BOOK_ANY:
 			if (typeid(*(bd->getBook())) == typeid(TechnicalBook)) {
@@ -205,9 +200,9 @@ void BookStore::displayBooks(int category)
 
 BookDetails *BookStore::searchBook(const string title)
 {
-    for (int i = 0; i < bookDetailsCnt; i++) {
-        if (books[i]->getBook()->getTitle() == title) {
-            return books[i];
+    for (bookIter = books.begin(); bookIter != books.end(); bookIter++) {
+        if ((*bookIter)->getBook()->getTitle() == title) {
+            return *bookIter;
         }
     }
 
@@ -218,13 +213,11 @@ void BookStore::searchBook(const string title, int numCopies)
 {
 	char ans;
 	BookDetails *bd = NULL;
-	int index = -1;
 	int discount = 0;
 	double price = 0.0;
-    for (int i = 0; i < bookDetailsCnt; i++) {
-        if (books[i]->getBook()->getTitle() == title) {
-            bd = books[i];
-			index = i;
+     for (bookIter = books.begin(); bookIter != books.end(); bookIter++) {
+        if ((*bookIter)->getBook()->getTitle() == title) {
+            bd = *bookIter;
 			break;
         }
     }
@@ -257,16 +250,8 @@ void BookStore::searchBook(const string title, int numCopies)
 			// reduce the stock of the book and if stock becomes 0 then delete the book;
 			if ((bd->getBookStock() - numCopies) == 0) {
 				// Delete the book from the catalogue
-				if (index == (bookDetailsCnt - 1)) {
-					// do nothing last book in catalogue
-					delete bd;
-					bookDetailsCnt--;
-				} else {
-					//swap the last bookdetail to this index
-					books[index] = books[bookDetailsCnt - 1];
-					bookDetailsCnt--;
-					delete bd;
-				}
+				delete bd;
+				books.erase(bookIter);
 			} else {
 				// just update the stock
 				bd->setBookStock(bd->getBookStock() - numCopies);

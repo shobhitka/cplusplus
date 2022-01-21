@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <list>
 using namespace std;
 
 #define BOOK_ANY		1
@@ -49,9 +50,8 @@ public:
 class BookStore {
 private:
 	string bookStoreName;
-	BookDetails *books[16];
-	int bookDetailsCnt = 0;
-	int maxCnt;
+	list <BookDetails *> books;
+	list <BookDetails *>::iterator bookIter;
 	static BookStore *bs;
 
 private:
